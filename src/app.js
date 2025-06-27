@@ -6,17 +6,20 @@ const config = require('./config/env');
 const routes = require('./routes');
 const errorHandler = require('./middleware/errorHandler');
 const logger = require('./utils/logger');
-
+const webhookRoutes = require('./routes/stripeWebhook');
 const app = express();
+app.use('/webhook', webhookRoutes);
 
 // Middleware
 app.use(helmet());
 app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+
 app.use(morgan('dev'));
 
 // Routes
+app.use(express.urlencoded({ extended: true }));
+
+app.use(express.json());
 app.use('/api', routes);
 
 // Error handling

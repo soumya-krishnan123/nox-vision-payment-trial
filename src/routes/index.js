@@ -1,9 +1,11 @@
 const express = require('express');
-const userRoutes = require('./userRoutes');
-
+const paymentRoutes = require('./paymentRoutes');
+const planRoutes = require('./planRoutes');
+const webhookRoutes = require('./stripeWebhook');
 const router = express.Router();
 
-router.use('/user', userRoutes);
+router.use('/payment', paymentRoutes);
+router.use('/plan', planRoutes);
 
 // Health check endpoint
 router.get('/health', (req, res) => {
