@@ -6,9 +6,7 @@ const config = require('./config/env');
 const routes = require('./routes');
 const errorHandler = require('./middleware/errorHandler');
 const logger = require('./utils/logger');
-const webhookRoutes = require('./routes/stripeWebhook');
 const app = express();
-app.use('/webhook', webhookRoutes);
 
 // Middleware
 app.use(helmet());

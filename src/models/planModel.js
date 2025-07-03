@@ -4,7 +4,7 @@ exports.createPlan = async (plan) => {
   const query = `
     INSERT INTO subscription_plans (
       name,
-      stripe_price_id,
+      plan_id,
       amount,
       currency,
       uploads,
@@ -27,7 +27,7 @@ exports.createPlan = async (plan) => {
 
   const values = [
     plan.name,
-    plan.stripe_price_id,
+    plan.plan_id,
     plan.amount,
     plan.currency,
     plan.uploads,

@@ -1,7 +1,6 @@
 const express = require('express');
 const paymentRoutes = require('./paymentRoutes');
 const planRoutes = require('./planRoutes');
-const webhookRoutes = require('./stripeWebhook');
 const router = express.Router();
 
 router.use('/payment', paymentRoutes);
