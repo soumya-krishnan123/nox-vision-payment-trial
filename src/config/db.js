@@ -12,6 +12,8 @@ const pool = new Pool({
 
 pool.on('connect', () => {
   logger.info('Connected to PostgreSQL database');
+  console.log('Connected to PostgreSQL database');
+  
 });
 
 pool.on('error', (err) => {
