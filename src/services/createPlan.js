@@ -18,8 +18,8 @@ async function getAccessToken() {
 }
 const customPlanData = {
     product_id: 'PROD-6F6597158H6865522', // your product ID
-    name: 'Custom Plan',
-    description: 'Custom subscription plan tailored for user',
+    name: 'Business',
+    description: 'Starter subscription plan tailored for user',
     billing_cycles: [
       {
         frequency: {
@@ -31,7 +31,7 @@ const customPlanData = {
         total_cycles: 0, // infinite billing cycles
         pricing_scheme: {
           fixed_price: {
-            value: '15.99', // set custom price here
+            value: '499', // set custom price here
             currency_code: 'USD',
           },
         },
@@ -68,10 +68,10 @@ try{
     }
   );
 
-  console.log('✅ Plan Created:', response.data);
+  console.log(' Plan Created:', response.data);
 }
 catch(error){
-  console.error('❌ Failed to create plan:', error.response.data);
+  console.error(' Failed to create plan:', error.response.data);
 }
 }
 createPlan().catch(console.error);

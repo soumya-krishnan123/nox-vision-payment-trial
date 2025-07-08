@@ -5,7 +5,6 @@ const planModel = require('../models/planModel');
 
 const logger = require('../utils/logger');
 
-
 //add plan
 exports.addPlan = async (planData) => {
   // Check if user already exists
@@ -16,7 +15,12 @@ exports.addPlan = async (planData) => {
     error.statusCode = 409;
     throw error;
   } 
-
+  const existingPlanwithPlanId = await planModel.getPlanByPlanId(planData.plan_id);
+  if (existingPlanwithPlanId) {
+    const error = new Error('Plan with this Paypal plan id already exists');
+    error.statusCode = 409;
+    throw error;
+  } 
 
   // Create plan
   const plan = await planModel.createPlan({

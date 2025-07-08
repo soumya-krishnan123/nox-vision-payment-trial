@@ -29,4 +29,22 @@ exports.createPayment = async (sub, user_id) => {
 
   
   };
+  exports.showPurchaseHistory=async (userId) => {
+    const purchases = await paymentModel.findByUserId(userId);
+    if (!purchases) {
+      const error = new Error('Plan not found');
+      error.statusCode = 404;
+      throw error;
+    }
+  return purchases;
+  };
   
+  exports.showInvoiceforPaymentId=async (payment_id) => {
+    const invoice = await paymentModel.findPaymentDetailsForInvoice(payment_id);
+    if (!invoice) {
+      const error = new Error('Invoice not found');
+      error.statusCode = 404;
+      throw error;
+    }
+  return invoice;
+  };
