@@ -16,6 +16,7 @@ exports.createSubscription = async (sub, user_id) => {
         $1, $2, $3, $4, $5,
         $6, $7
       )
+        
       RETURNING *
     `;
 
@@ -30,6 +31,43 @@ exports.createSubscription = async (sub, user_id) => {
     ];
 
     const { rows } = await db.query(insertQuery, values);
+    console.log("subscription data",rows[0]);
+
     return rows[0];
+    
 }
 
+  exports.cancelSubscription = async (paypal_subscription_id) => {
+    const updateQuery = `
+      UPDATE subscriptions
+      SET subscription_status = 'cancelled'
+      WHERE paypal_subscription_id = $1
+      RETURNING *;
+    `;
+    const { rows } = await db.query(updateQuery, [paypal_subscription_id]);
+    return rows[0];
+};
+
+
+
+//findByPaypalSubscriptionId
+
+exports.findByPaypalSubscriptionId = async (paypal_subscription_id) => {
+  const query = `
+    SELECT * from subscriptions
+    WHERE paypal_subscription_id = $1;
+  `;
+  const { rows } = await db.query(query, [paypal_subscription_id]);
+  console.log(rows[0]);
+  return rows[0];
+};
+
+exports.findActiveSubscriptionForUser= async (user_id) => {
+  const query = `
+    SELECT * from subscriptions
+    WHERE user_id = $1 AND subscription_status='active';
+  `;
+  const { rows } = await db.query(query, [user_id]);
+  console.log(rows[0]);
+  return rows[0];
+};

@@ -61,7 +61,7 @@ exports.findById = async (planId) => {
 //show all plans
 exports.getAllPlans = async () => {
   const query = `
-    SELECT id, name, model_hosting, offline_detection, analytics,status,amount,detections,uploads,api_calls,sdk_access,email_support,stripe_price_id,currency,billing_period
+    SELECT id, plan_id,name, model_hosting, offline_detection, analytics,status,amount,detections,uploads,api_calls,sdk_access,email_support,currency,billing_period
     FROM subscription_plans 
     WHERE status = true
   `;
@@ -77,5 +77,25 @@ exports.getPlanByName = async (planName) => {
       LIMIT 1
     `;
   const { rows } = await db.query(query, [planName]);
+  return rows[0];
+};
+
+exports.getPlanByPlanId = async (planId) => {
+  const query = `
+      SELECT id, name, model_hosting, offline_detection, analytics, billing_period, status
+      FROM subscription_plans
+      WHERE plan_id = $1
+      LIMIT 1
+    `;
+  const { rows } = await db.query(query, [planId]);
+  return rows[0];
+};
+
+//for modified auth with user session
+//fetch user session by token
+exports.fetchUserSessionByToken = async (userId, token) => {
+  const query =
+    'SELECT * FROM user_sessions WHERE user_id = $1 AND token = $2'
+  const { rows } = await db.query(query, [userId, token]);
   return rows[0];
 };
