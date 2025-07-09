@@ -7,7 +7,6 @@ exports.createSubscription = async (sub, user_id) => {
     const start_date = new Date(sub.start_time);
     const next_billing_date = sub.billing_info?.next_billing_time ? new Date(sub.billing_info.next_billing_time) : null;
     const last_payment_date = sub.billing_info?.last_payment?.time ? new Date(sub.billing_info.last_payment.time) : null;
-
     const insertQuery = `
       INSERT INTO subscriptions (
          user_id, plan_id, paypal_subscription_id, subscription_status,
@@ -69,5 +68,33 @@ exports.findActiveSubscriptionForUser= async (user_id) => {
   `;
   const { rows } = await db.query(query, [user_id]);
   console.log(rows[0]);
+  return rows[0];
+};
+
+
+
+exports.getModelAnalyticsForMonth = async (userId) => {
+  const query = `
+SELECT 
+  COUNT(*) AS total_models,
+  SUM(detection) AS total_detections,
+
+  SUM(CASE 
+        WHEN model_date >= date_trunc('month', CURRENT_DATE)
+         AND model_date < date_trunc('month', CURRENT_DATE) + interval '1 month'
+        THEN detection
+        ELSE 0
+      END) AS detections_this_month,
+      COUNT(CASE 
+          WHEN model_date >= date_trunc('month', CURRENT_DATE)
+           AND model_date < date_trunc('month', CURRENT_DATE) + interval '1 month'
+          THEN 1
+        END) AS uploads_this_month
+FROM models
+WHERE user_id = $1;
+
+  `;
+
+  const { rows } = await db.query(query, [userId]);
   return rows[0];
 };

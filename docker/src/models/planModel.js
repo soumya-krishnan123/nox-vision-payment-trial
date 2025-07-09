@@ -82,7 +82,7 @@ exports.getPlanByName = async (planName) => {
 
 exports.getPlanByPlanId = async (planId) => {
   const query = `
-      SELECT id, name, model_hosting, offline_detection, analytics, billing_period, status
+      SELECT id, name, model_hosting, offline_detection, analytics, billing_period, status,detections,uploads,api_calls,sdk_access,email_support,currency,amount
       FROM subscription_plans
       WHERE plan_id = $1
       LIMIT 1
