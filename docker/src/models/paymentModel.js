@@ -59,7 +59,7 @@ exports.create = async (sub,user_id,sub_id) => {
 
 exports.findByUserId=async (user_id) => {
   const updateQuery = `
-   SELECT p.id,p.amount,p.payment_method,p.created_at, sp.name AS plan_name
+   SELECT p.id,p.amount,p.payment_method,p.created_at,p.currency, sp.name AS plan_name
     FROM payments p
     LEFT JOIN subscription_plans sp ON p.plan_id = sp.plan_id
     WHERE p.user_id = $1 AND p.payment_status = 'active';
