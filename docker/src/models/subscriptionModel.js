@@ -46,6 +46,16 @@ exports.createSubscription = async (sub, user_id) => {
     const { rows } = await db.query(updateQuery, [paypal_subscription_id]);
     return rows[0];
 };
+  exports.cancelSubscriptionById = async (id) => {
+    const updateQuery = `
+      UPDATE subscriptions
+      SET subscription_status = 'cancelled'
+      WHERE id = $1
+      RETURNING *;
+    `;
+    const { rows } = await db.query(updateQuery, [id]);
+    return rows[0];
+};
 
 
 

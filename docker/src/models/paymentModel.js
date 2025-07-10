@@ -7,6 +7,7 @@ exports.create = async (sub,user_id,sub_id) => {
   const plan_id=sub.plan_id
   const paypal_payment_id = sub.billing_info?.last_payment?.transaction_id || null;
   const amount = sub.billing_info?.last_payment?.amount?.value || 0;
+  const countryCode = sub?.subscriber?.shipping_address?.address?.country_code|| 'US'; // Default to 'US' if not available
   const currency = sub.billing_info?.last_payment?.amount?.currency_code || 'USD';
   const payment_status = (sub.status ).toLowerCase()|| 'pending'; 
   const payment_date = sub.billing_info?.last_payment?.time
@@ -29,10 +30,11 @@ exports.create = async (sub,user_id,sub_id) => {
       payment_method,
       status,
       paypal_subscription_id,
-      plan_id
+      plan_id,
+      country_code
     ) VALUES (
       $1, $2, $3, $4, $5,
-      $6, $7, $8, $9, $10, $11,$12
+      $6, $7, $8, $9, $10, $11,$12,$13
     )
     RETURNING *
   `;
@@ -49,7 +51,8 @@ exports.create = async (sub,user_id,sub_id) => {
     payment_method,
     status,
     paypal_subscription_id,
-    plan_id
+    plan_id,
+    countryCode
   ];
 
   const { rows } = await db.query(query, values);
@@ -77,6 +80,7 @@ exports.findPaymentDetailsForInvoice=async (payment_id) => {
   p.created_at,
   p.payer_email,
   p.currency,
+  p.country_code,
   sp.name AS plan_name,
   u.name AS user_name,    
   u.email AS user_email

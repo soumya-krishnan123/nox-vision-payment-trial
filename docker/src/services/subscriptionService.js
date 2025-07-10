@@ -81,7 +81,16 @@ exports.updateSubscription = async (subscription_id, user_id) => {
     );
 
     const sub = response.data;
-   
+console.log('subscription data from paypal', JSON.stringify(sub, null, 2)); // pretty log
+
+// ✅ Extract country code if available
+const countryCode = sub?.subscriber?.shipping_address?.address?.country_code;
+
+if (countryCode) {
+  console.log('Subscriber country code:', countryCode);
+} else {
+  console.log('Country code not available in shipping_address');
+}   
 //     const existing_subscription=subscriptionModel.findByPaypalSubscriptionId(sub.id)
 // if(existing_subscription){
 //   throw new Error('Suscription id from paypal already exists');
@@ -91,7 +100,17 @@ exports.updateSubscription = async (subscription_id, user_id) => {
 //   throw new Error('Payment already exists for this PayPal payment ID');
 
 // }
-
+    const previousSubscription = await subscriptionModel.findActiveSubscriptionForUser(user_id);
+    if (previousSubscription) {
+      // Cancel the previous subscription
+      console.log("previousSubscription", previousSubscription);
+      
+      const id = previousSubscription.id;
+      console.log("subscription_id", id);
+      
+    const cancelled = await subscriptionModel.cancelSubscriptionById(id);
+      console.log("cancelled", cancelled);
+    }
     const subscription = await subscriptionModel.createSubscription(sub, user_id);
     
     const payment = await paymentModel.create(sub, user_id, subscription.id);
